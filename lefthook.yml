@@ -1,0 +1,18 @@
+# lefthook.yml - Git hooks configuration
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    oxlint:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: pnpm lint:oxlint
+    eslint:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: pnpm lint:eslint
+    format-check:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: pnpm format:check
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec tsc --noEmit --skipLibCheck

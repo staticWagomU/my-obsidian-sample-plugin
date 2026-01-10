@@ -23,6 +23,7 @@
 		"eslint-plugin-obsidianmd": "0.1.9",
 		"globals": "14.0.0",
 		"jiti": "2.6.1",
+		"lefthook": "^2.0.13",
 		"oxfmt": "^0.23.0",
 		"oxlint": "^1.38.0",
 		"tslib": "2.4.0",
