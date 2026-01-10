@@ -30,7 +30,7 @@ export default tseslint.config(
 	globalIgnores([
 		"node_modules",
 		"dist",
-		"esbuild.config.mjs",
+		"vite.config.ts",
 		"version-bump.mjs",
 		"versions.json",
 		"main.js",
