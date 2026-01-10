@@ -1,18 +1,16 @@
 import tseslint from 'typescript-eslint';
 import obsidianmd from "eslint-plugin-obsidianmd";
-import globals from "globals";
 import { globalIgnores } from "eslint/config";
 
+// eslint-plugin-obsidianmd のみを有効化
+// 一般的なルール（no-unused-vars等）は Oxlint で実行
 export default tseslint.config(
 	{
 		languageOptions: {
-			globals: {
-				...globals.browser,
-			},
 			parserOptions: {
 				projectService: {
 					allowDefaultProject: [
-						'eslint.config.js',
+						'eslint.config.mts',
 						'manifest.json'
 					]
 				},
@@ -22,11 +20,17 @@ export default tseslint.config(
 		},
 	},
 	...obsidianmd.configs.recommended,
+	{
+		// Oxlint に任せるルールを無効化（obsidianmd.configs.recommended の後に適用）
+		rules: {
+			"no-undef": "off",
+			"no-console": "off",
+		},
+	},
 	globalIgnores([
 		"node_modules",
 		"dist",
 		"esbuild.config.mjs",
-		"eslint.config.js",
 		"version-bump.mjs",
 		"versions.json",
 		"main.js",
