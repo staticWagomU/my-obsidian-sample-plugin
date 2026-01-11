@@ -7,6 +7,8 @@
 	"scripts": {
 		"dev": "vite build --watch",
 		"build": "tsc -noEmit -skipLibCheck && vite build --mode production",
+		"test": "vitest",
+		"test:run": "vitest run",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"lint": "oxlint && eslint .",
 		"lint:oxlint": "oxlint",
@@ -29,7 +31,8 @@
 		"tslib": "2.4.0",
 		"typescript": "^5.8.3",
 		"typescript-eslint": "8.35.1",
-		"vite": "npm:rolldown-vite@^7.3.1"
+		"vite": "npm:rolldown-vite@^7.3.1",
+		"vitest": "^4.0.16"
 	},
 	"dependencies": {
 		"obsidian": "latest"

@@ -58,5 +58,15 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 		},
+		test: {
+			globals: true,
+			environment: "node",
+			include: ["src/**/*.test.ts"],
+			server: {
+				deps: {
+					external: ["obsidian"],
+				},
+			},
+		},
 	};
 });
