@@ -6,13 +6,27 @@ pre-commit:
   commands:
     oxlint:
       glob: "*.{ts,tsx,js,jsx}"
-      run: pnpm lint:oxlint
+      run: pnpm exec oxlint {staged_files}
     eslint:
       glob: "*.{ts,tsx,js,jsx}"
-      run: pnpm lint:eslint
+      run: pnpm exec eslint {staged_files}
     format-check:
       glob: "*.{ts,tsx,js,jsx}"
-      run: pnpm format:check
+      run: pnpm exec oxfmt {staged_files}
     typecheck:
       glob: "*.{ts,tsx}"
       run: pnpm exec tsc --noEmit --skipLibCheck
+
+pre-push:
+  parallel: true
+  commands:
+    oxlint:
+      run: pnpm lint:oxlint
+    eslint:
+      run: pnpm lint:eslint
+    format-check:
+      run: pnpm format:check
+    typecheck:
+      run: pnpm exec tsc --noEmit --skipLibCheck
+    test:
+      run: pnpm test:run
