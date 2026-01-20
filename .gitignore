@@ -26,3 +26,7 @@ coverage/
 
 # Hot reload marker
 .hotreload
+
+# Local environment variables
+.env
+.env.local
