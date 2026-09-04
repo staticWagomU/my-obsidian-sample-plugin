@@ -6,6 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Obsidian Community Plugin using TypeScript. Entry point `src/main.ts` compiles to `main.js` which Obsidian loads.
 
+## Toolchain Setup (mise + TAKUMI GUARD)
+
+Node.js / pnpm / direnv are pinned by `mise.toml`. Dependencies are fetched through the
+TAKUMI GUARD secure registry (`https://npm.flatt.tech/`), which requires a token.
+
+```bash
+# 1. Set the token (obtain it from a project maintainer)
+cp .env.example .env   # then fill in TAKUMI_GUARD_TOKEN
+
+# 2. Install tools, allow direnv, install deps, set up Git hooks
+mise run setup
+```
+
+**How the token reaches pnpm**: `.npmrc` expands `${TAKUMI_GUARD_TOKEN}` from the *shell
+environment*, not from `.env` directly. `.envrc` bridges the two via `dotenv_if_exists`, so
+direnv must be allowed for `pnpm install` to authenticate. In CI the same variable is
+supplied from the `TAKUMI_GUARD_TOKEN` GitHub Secret.
+
+If `pnpm` is missing from your shell, run `mise install`, or prefix commands with
+`mise exec -- pnpm ...`.
+
 ## Commands
 
 ```bash

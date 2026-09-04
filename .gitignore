@@ -30,3 +30,7 @@ coverage/
 # Local environment variables
 .env
 .env.local
+
+# direnv
+.direnv/
+.envrc.local

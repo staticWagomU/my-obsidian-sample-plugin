@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+# .npmrc が TAKUMI GUARD レジストリを参照するため、pnpm install に認証が必要
+env:
+  TAKUMI_GUARD_TOKEN: ${{ secrets.TAKUMI_GUARD_TOKEN }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
