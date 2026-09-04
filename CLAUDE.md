@@ -87,6 +87,19 @@ src/
 - **Testing**: Vitest
 - **Formatting**: oxfmt
 
+### pnpm Configuration
+
+- `package.json` pins the package manager (`packageManager: pnpm@10.26.0`) and requires
+  Node `>=20`, matching the CI matrix. `private: true` guards against accidental npm publish —
+  this plugin ships via GitHub releases, never npm.
+- `pnpm-workspace.yaml` holds pnpm settings (pnpm 10 reads settings from here, not `.npmrc`):
+  - `onlyBuiltDependencies` — pnpm 10 blocks dependency build scripts by default.
+    **lefthook must stay on this list**; its postinstall is what installs the Git hooks,
+    so removing it silently disables `lefthook.yml`.
+  - `minimumReleaseAge: 10080` — ignore package versions published within the last 7 days
+    (value is in minutes). Applies at *resolution* time only, so `--frozen-lockfile`
+    installs are unaffected. Layers with TAKUMI GUARD for supply-chain defense.
+
 ## Obsidian Plugin Constraints
 
 - Bundle everything into single `main.js` (no unbundled runtime deps)
