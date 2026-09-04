@@ -86,10 +86,20 @@ src/
 
 ## Build System
 
-- **Bundler**: Vite + Rolldown (`vite.config.ts`)
-- **Linting**: Oxlint (fast, general rules) + ESLint (obsidianmd-specific rules only)
-- **Testing**: Vitest
-- **Formatting**: oxfmt
+**Vite+ (`vite-plus`) is the unified toolchain.** One dependency supplies the bundler,
+test runner, linter, and formatter; `vite.config.ts` imports `defineConfig` from `vite-plus`.
+
+- **Bundler**: Vite 8 + Rolldown, via Vite+ (`vp build`)
+- **Testing**: Vitest, via Vite+ (`vp test`); tests import from `vite-plus/test`, not `vitest`
+- **Linting**: Oxlint via Vite+ (`vp lint`) + ESLint (obsidianmd-specific rules only)
+- **Formatting**: oxfmt via Vite+ (`vp fmt`; add `--write` to actually rewrite)
+
+**Never call `oxlint` or `oxfmt` directly.** Vite+ replaces those bin names with shims that
+print a redirect and exit 1. Use `vp lint` / `vp fmt` — this is why `lefthook.yml` calls
+`pnpm exec vp lint` rather than `pnpm exec oxlint`.
+
+`vp toolchain` prints the exact bundled tool versions. `vp check` runs format + lint + types
+in one pass.
 
 ### pnpm Configuration
 
@@ -102,7 +112,12 @@ src/
     so removing it silently disables `lefthook.yml`.
   - `minimumReleaseAge: 10080` — ignore package versions published within the last 7 days
     (value is in minutes). Applies at *resolution* time only, so `--frozen-lockfile`
-    installs are unaffected. Layers with TAKUMI GUARD for supply-chain defense.
+    installs are unaffected. Layers with TAKUMI Guard for supply-chain defense.
+  - `minimumReleaseAgeExclude` — added by `vp migrate`. Exempts the Vite+ toolchain packages
+    from the 7-day hold, since their releases are pinned as an interlocking set.
+  - `catalog:` / `overrides` — also from `vp migrate`. `vite` and `vitest` resolve to the
+    versions Vite+ bundles, so the toolchain cannot drift out of sync. This is why those
+    entries in `package.json` read `catalog:` instead of a version range.
 
 ## Obsidian Plugin Constraints
 

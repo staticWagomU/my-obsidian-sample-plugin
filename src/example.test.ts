@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 // Pure logic tests (no Obsidian dependencies)
 describe("Example Test", () => {

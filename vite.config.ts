@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { builtinModules } from "node:module";
 import { resolve } from "node:path";
-import type { Plugin } from "vite";
-import { defineConfig } from "vite";
+import type { Plugin } from "vite-plus";
+import { defineConfig } from "vite-plus";
 
 /**
  * Load .env file without external dependencies

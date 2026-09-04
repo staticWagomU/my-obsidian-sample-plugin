@@ -1,18 +1,20 @@
 # lefthook.yml - Git hooks configuration
 # https://github.com/evilmartians/lefthook
 
+# Oxlint/oxfmt は Vite+ が提供する。`oxlint`/`oxfmt` の bin は Vite+ が
+# 案内シム(exit 1)に置き換えているため、必ず `vp lint` / `vp fmt` で呼ぶこと。
 pre-commit:
   parallel: true
   commands:
     oxlint:
       glob: "*.{ts,tsx,js,jsx}"
-      run: pnpm exec oxlint {staged_files}
+      run: pnpm exec vp lint {staged_files}
     eslint:
       glob: "*.{ts,tsx,js,jsx}"
       run: pnpm exec eslint {staged_files}
     format-check:
       glob: "*.{ts,tsx,js,jsx}"
-      run: pnpm exec oxfmt {staged_files}
+      run: pnpm exec vp fmt {staged_files}
     typecheck:
       glob: "*.{ts,tsx}"
       run: pnpm exec tsc --noEmit --skipLibCheck
