@@ -1,10 +1,9 @@
-import tseslint from 'typescript-eslint';
 import obsidianmd from "eslint-plugin-obsidianmd";
-import { globalIgnores } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 // eslint-plugin-obsidianmd のみを有効化
 // 一般的なルール（no-unused-vars等）は Oxlint で実行
-export default tseslint.config(
+export default defineConfig(
 	{
 		languageOptions: {
 			parserOptions: {

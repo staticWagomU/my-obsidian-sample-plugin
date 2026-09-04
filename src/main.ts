@@ -4,7 +4,9 @@ import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from "./settings
 // Remember to rename these classes and interfaces!
 
 export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+	// Assigned in loadSettings() during onload(), which Obsidian always runs
+	// before anything can reach this field.
+	settings!: MyPluginSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -31,7 +33,7 @@ export default class MyPlugin extends Plugin {
 		this.addCommand({
 			id: "replace-selected",
 			name: "Replace selected content",
-			editorCallback: (editor: Editor, view: MarkdownView) => {
+			editorCallback: (editor: Editor) => {
 				editor.replaceSelection("Sample editor command");
 			},
 		});

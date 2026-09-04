@@ -114,7 +114,13 @@ src/
 
 ## TypeScript Configuration
 
-Strict mode with `noUncheckedIndexedAccess`, `strictNullChecks`, `noImplicitAny`. Source in `src/`, base URL is `src`.
+Strict mode with `noUncheckedIndexedAccess`, `strictNullChecks`, `noImplicitAny`. Source in `src/`.
+`moduleResolution` is `bundler`, matching the Vite build.
+
+**TypeScript is held at 5.x on purpose.** TypeScript 7 is released, but `typescript-eslint`
+declares `typescript: >=4.8.4 <6.1.0`, and `eslint-plugin-obsidianmd` depends on
+typescript-eslint. Bumping to 7 makes `pnpm lint` fail outright with
+"typescript-eslint does not support TS 7.0". Revisit once typescript-eslint ships TS 7 support.
 
 ## Skills
 
