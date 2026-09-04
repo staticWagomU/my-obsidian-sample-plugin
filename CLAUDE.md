@@ -6,23 +6,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Obsidian Community Plugin using TypeScript. Entry point `src/main.ts` compiles to `main.js` which Obsidian loads.
 
-## Toolchain Setup (mise + TAKUMI GUARD)
+## Toolchain Setup (mise + TAKUMI Guard)
 
 Node.js / pnpm / direnv are pinned by `mise.toml`. Dependencies are fetched through the
-TAKUMI GUARD secure registry (`https://npm.flatt.tech/`), which requires a token.
+TAKUMI Guard secure registry (`https://npm.flatt.tech/`).
 
 ```bash
-# 1. Set the token (obtain it from a project maintainer)
-cp .env.example .env   # then fill in TAKUMI_GUARD_TOKEN
-
-# 2. Install tools, allow direnv, install deps, set up Git hooks
+# Install tools, allow direnv, install deps, set up Git hooks
 mise run setup
 ```
 
-**How the token reaches pnpm**: `.npmrc` expands `${TAKUMI_GUARD_TOKEN}` from the *shell
-environment*, not from `.env` directly. `.envrc` bridges the two via `dotenv_if_exists`, so
-direnv must be allowed for `pnpm install` to authenticate. In CI the same variable is
-supplied from the `TAKUMI_GUARD_TOKEN` GitHub Secret.
+**No token required.** `.npmrc` uses TAKUMI Guard's *anonymous mode* — setting the registry
+URL alone enables malicious-package blocking, so forks and fresh clones install normally.
+A personal (`tg_anon_`) or org (`tg_org_`) token only adds download tracking and breach
+notifications; if you want that, put it in your user-level `~/.npmrc`, never in this repo.
+
+CI uses `flatt-security/setup-takumi-guard-npm@v1`, which mints a short-lived token per job
+via OIDC — no long-lived GitHub Secret. To link runs to an organization, add
+`permissions: id-token: write` and pass `with: bot-id`.
+
+TAKUMI Guard is a read-only proxy, so `npm publish` cannot go through it. This plugin ships
+via GitHub Releases, so that limitation does not apply here.
 
 If `pnpm` is missing from your shell, run `mise install`, or prefix commands with
 `mise exec -- pnpm ...`.

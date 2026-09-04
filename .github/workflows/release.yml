@@ -8,15 +8,14 @@ on:
 permissions:
   contents: write
 
-# .npmrc が TAKUMI GUARD レジストリを参照するため、pnpm install に認証が必要
-env:
-  TAKUMI_GUARD_TOKEN: ${{ secrets.TAKUMI_GUARD_TOKEN }}
-
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # 匿名モード（bot-id なし）: 悪意あるパッケージのブロックのみ有効
+      - uses: flatt-security/setup-takumi-guard-npm@v1
 
       - uses: pnpm/action-setup@v4
         with:
