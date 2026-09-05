@@ -64,6 +64,59 @@ export default defineConfig(({ mode }) => {
 	}
 
 	return {
+		// Oxlint の設定はここに置く。ルートに `oxlint.json` を置いても
+		// 読まれない（Oxlint が探すのは `.oxlintrc.json`）ため、Vite+ は
+		// この lint ブロックを唯一の置き場所として案内している。
+		lint: {
+			options: {
+				// 型情報を要するルール(no-floating-promises 等)を有効にする。
+				// 実体は Vite+ 同梱の oxlint-tsgolint、つまり TypeScript 7 の
+				// ネイティブ実装で、devDependencies の typescript とは独立に動く。
+				typeAware: true,
+				// tsgo 自身の型診断も出す。tsc(5.9) と TypeScript 7 の両方の目で
+				// 見ることになるので、7 系で初めて壊れる書き方がここで止まる。
+				// 詳細は CLAUDE.md の TypeScript 7 の項を参照。
+				typeCheck: true,
+			},
+			// plugins は既定を置き換えてしまうので指定しない。
+			// 既定の unicorn / typescript / oxc をそのまま使う。
+			categories: {
+				correctness: "error",
+				suspicious: "warn",
+				perf: "warn",
+				pedantic: "off",
+				style: "off",
+			},
+			rules: {
+				"no-unused-vars": "warn",
+				// console.error だけは通す。ユーザーに出す Notice とは別に、
+				// 失敗の詳細を開発者コンソールへ残さないと原因が追えない。
+				"no-console": ["warn", { allow: ["error"] }],
+				"typescript/no-explicit-any": "warn",
+				// `new Notice(message)` は Obsidian の公開 API そのもので、
+				// 戻り値を捨てるのが正しい使い方。副作用のための new を
+				// 咎めるこのルールとは噛み合わない。
+				"no-new": "off",
+			},
+			overrides: [
+				{
+					// ビルド設定の console.log は開発者への出力先案内であって、
+					// プラグイン本体に混ざるログとは事情が違う。
+					files: ["vite.config.ts"],
+					rules: { "no-console": "off" },
+				},
+				{
+					// テストダブルは意図して部分実装なので、`as unknown as T` で
+					// 本物の型を名乗らせるのがこのリポジトリの定石。ここで
+					// この規則を守らせても、実装のない残りを埋める作業が増えるだけ。
+					files: ["src/**/*.test.ts"],
+					rules: { "typescript/no-unsafe-type-assertion": "off" },
+				},
+			],
+			// main.js と coverage/ は .gitignore 済みで Oxlint が自動で外す。
+			// リリース用スクリプトだけは追跡下にあるので明示的に外す。
+			ignorePatterns: ["version-bump.mjs"],
+		},
 		plugins: [bannerPlugin()],
 		build: {
 			outDir,
@@ -104,7 +157,12 @@ export default defineConfig(({ mode }) => {
 			coverage: {
 				provider: "v8",
 				reporter: ["text", "json", "html"],
-				exclude: ["node_modules/", "src/**/*.test.ts"],
+				// Report every source file, not only the ones a test happened to
+				// import. Without this the untested modules are simply absent and
+				// the summary reads 100%, which is the opposite of the point.
+				all: true,
+				include: ["src/**/*.ts"],
+				exclude: ["src/**/*.test.ts"],
 			},
 			server: {
 				deps: {
