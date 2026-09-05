@@ -8,10 +8,9 @@ export default defineConfig(
 		languageOptions: {
 			parserOptions: {
 				projectService: {
-					allowDefaultProject: [
-						'eslint.config.mts',
-						'manifest.json'
-					]
+					// このファイル自身は tsconfig.json の include に入っているので
+					// ここには挙げない。両方に載ると projectService が衝突する。
+					allowDefaultProject: ['manifest.json']
 				},
 				tsconfigRootDir: import.meta.dirname,
 				extraFileExtensions: ['.json']
@@ -29,6 +28,8 @@ export default defineConfig(
 	globalIgnores([
 		"node_modules",
 		"dist",
+		// `pnpm test:coverage` の出力。gitignore 済みだが ESLint は自前で走査する。
+		"coverage",
 		"vite.config.ts",
 		"version-bump.mjs",
 		"versions.json",
